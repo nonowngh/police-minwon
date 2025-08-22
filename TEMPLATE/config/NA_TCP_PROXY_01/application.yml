@@ -1,0 +1,20 @@
+#기관명은 3자리로 해야함.
+network:
+  adaptor:
+    proxy:
+      tcp:
+        enabled: true
+        local-port: 8084
+        remote-host: TCS:127.0.0.1,SJS:127.0.0.1,KFT:127.0.0.1
+        remote-port: TCS:8081,SJS:8081,KFT:8085
+        gbn-startlength: 4
+        gbn-endlength: 9
+server:
+  port: 9999
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration

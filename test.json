@@ -1,0 +1,21 @@
+{
+  "interfaceId": "IF_DTF_001",
+  "actionType": "CUSTOMIZE",
+  "strategy": "StandardDTFBatch",
+  "cronExpression": [
+    "0/20 * * * * ?"
+  ],
+  "actFirst": false,
+  "onSignalLoop": false,
+  "fileTempPath": "/atb/recv/IF_DTF_001/temp",
+  "fileErrorPath": "/atb/recv/IF_DTF_001/error",
+  "fileRecvPath": "/atb/recv/IF_DTF_001/success",
+  "fileType": "DELIMITER",
+  "fileDelimiter": ",",
+  "detailData": false,
+  "detailNames": [
+    "CHILD"
+  ],
+  "sendSystemCode": "A01",
+  "receiveSystemCode": "B01"
+}

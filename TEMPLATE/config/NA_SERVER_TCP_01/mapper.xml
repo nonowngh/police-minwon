@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.server.tcp.mapper.TcpServerMapper">
+
+	<update id="updateResult" parameterType="mb.fw.atb.tcp.server.entity.PenaltyPaymentResultEntity">
+		UPDATE custom_message set deal_state = 'S' WHERE org_msg_no = #{orgMsgNo} 
+	</update>
+	
+	<update id="updateCancle" parameterType="mb.fw.atb.tcp.server.entity.PenaltyPaymentCancleEntity">
+		UPDATE custom_message set deal_state = 'S' WHERE org_msg_no = #{orgMsgNo} 
+	</update>
+
+    <select id="selectByOrgMsgNo" parameterType="string" resultType="mb.fw.atb.tcp.server.entity.PenaltyPaymentDetailEntity">
+        SELECT * FROM custom_message WHERE org_msg_no = #{orgMsgNo}
+    </select>
+
+</mapper>

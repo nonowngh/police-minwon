@@ -1,0 +1,19 @@
+network:
+  adaptor:
+    server:
+       tcp:
+        enabled: true
+        bind-port: 8081
+        remote-host: 127.0.0.1
+        remote-port: 8085
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  main:
+    allow-bean-definition-overriding: true
+mybatis:
+   config-location: classpath:mybatis-config.xml
+server:
+   port: 24057
