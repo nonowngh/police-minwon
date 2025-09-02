@@ -1,0 +1,15 @@
+package mb.fw.net.policeminwon;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+
+@ComponentScan(basePackages = {"mb.fw.net.policeminwon", "mb.fw.adaptor"})
+@SpringBootApplication
+public class PoliceMinwonApplication {
+
+	public static void main(String[] args) {
+        SpringApplication.run(PoliceMinwonApplication.class, args);
+
+	}
+}

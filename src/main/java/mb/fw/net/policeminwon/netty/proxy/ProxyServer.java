@@ -10,6 +10,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
+import mb.fw.net.policeminwon.netty.proxy.client.AsyncConnectionClient;
 
 @Slf4j
 public class ProxyServer {
@@ -18,9 +19,10 @@ public class ProxyServer {
     private EventLoopGroup workerGroup;
     
 	private int bindPort;
-	
-	public ProxyServer(int bindPort) {
+	private AsyncConnectionClient client;
+	public ProxyServer(int bindPort, AsyncConnectionClient client) {
 		this.bindPort = bindPort;
+		this.client = client;
 	}
 	
 	public void start() {
@@ -36,7 +38,7 @@ public class ProxyServer {
                      @Override
                      protected void initChannel(SocketChannel ch) {
                     	 ch.pipeline().addLast(new mb.fw.net.common.codec.LengthFieldBasedFrameDecoder(1024, 0, 4, 0, 4, true));
-                         ch.pipeline().addLast(new LoggingHandler(LogLevel.INFO), new ProxyServerHandler());
+                         ch.pipeline().addLast(new LoggingHandler(LogLevel.INFO), new ProxyServerHandler(client));
                      }
                  });
 
