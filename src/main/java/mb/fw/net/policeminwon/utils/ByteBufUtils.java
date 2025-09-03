@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
 public class ByteBufUtils {
 
@@ -26,6 +27,12 @@ public class ByteBufUtils {
 	            buf.writeByte(' '); // ASCII space padding
 	        }
 	    }
+	}
+	
+	public static ByteBuf addMessageLength(ByteBuf messageBuf) {
+		ByteBuf lengthBuf = Unpooled.buffer(4);
+		writeLeftPaddingNumber(lengthBuf, messageBuf.readableBytes(), 4);
+		return Unpooled.wrappedBuffer(lengthBuf, messageBuf);
 	}
 	
 	public static void writeLeftPaddingNumber(ByteBuf buf, int value, int fixedLength) {

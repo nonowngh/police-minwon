@@ -1,4 +1,4 @@
-package mb.fw.net.policeminwon.dto;
+package mb.fw.net.policeminwon.entity;
 
 import java.io.ByteArrayOutputStream;
 
@@ -8,7 +8,7 @@ import lombok.Data;
  * 경찰청 범칙금 - 과태료 납부결과 통지
  */
 @Data
-public class PenaltyPaymentResultEntity {
+public class PaymentResultNotificationEntity {
 	//헤더
 	private String msgLength;            // 전문 길이
     private String jobType;              // 업무 구분
@@ -43,7 +43,7 @@ public class PenaltyPaymentResultEntity {
     private String payType;              // 납부 형태 구분 (AN, 1)
     private String reserveField7;        // 예비정보 FIELD 7 (AN, 9)
 
-    public String toFixedLengthString(PenaltyPaymentResultEntity req) {
+    public String toFixedLengthString(PaymentResultNotificationEntity req) {
     	StringBuilder sb = new StringBuilder();
         sb.append(padLeft(req.getMsgLength(), 4, '0'));             // 전문 길이
         sb.append(padRight(req.getJobType(), 3, ' '));              // 업무 구분

@@ -1,11 +1,11 @@
-package mb.fw.net.policeminwon.dto;
+package mb.fw.net.policeminwon.entity;
 
 import java.io.ByteArrayOutputStream;
 
 import lombok.Data;
 
 @Data
-public class PenaltyPaymentCancleEntity {
+public class CancelPaymentEntity {
 	//헤더
 	private String msgLength;           // 전문 길이
     private String jobType;             // 업무 구분
@@ -32,7 +32,7 @@ public class PenaltyPaymentCancleEntity {
     private String originPayType;       // 원거래 납부 형태 구분 (AN, 1)
     private String reserveField2;       // 예비 정보 FIELD 2 (AN, 9)
 
-    public String toFixedLengthString(PenaltyPaymentCancleEntity req) {
+    public String toFixedLengthString(CancelPaymentEntity req) {
         StringBuilder sb = new StringBuilder();
         sb.append(padLeft(req.getMsgLength(), 4, '0'));             // 전문 길이
         sb.append(padRight(req.getJobType(), 3, ' '));              // 업무 구분

@@ -1,4 +1,4 @@
-package mb.fw.net.policeminwon.dto;
+package mb.fw.net.policeminwon.entity;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
@@ -12,7 +12,7 @@ import lombok.Data;
  * 경찰청 범칙금 - 과태료 고지내역 상세 조회
  */
 @Data
-public class PenaltyPaymentDetailEntity {
+public class ViewBillingDetaillEntity {
 	//헤더
 	private String msgLength;            // 전문 길이
     private String jobType;              // 업무 구분
@@ -64,7 +64,7 @@ public class PenaltyPaymentDetailEntity {
     private String cardPayYn;            // 신용카드 납부 제하 여부 (AN, 1)
     private String reserveField6;        // 예비 정보 FIELD 6 (AN, 18)
 
-    public String toFixedLengthString(PenaltyPaymentDetailEntity req) throws Exception{
+    public String toFixedLengthString(ViewBillingDetaillEntity req) throws Exception{
         StringBuilder sb = new StringBuilder();
         sb.append(padLeft(req.getMsgLength(), 4, '0'));             // 전문 길이
         sb.append(padRight(req.getJobType(), 3, ' '));              // 업무 구분
@@ -158,7 +158,7 @@ public class PenaltyPaymentDetailEntity {
     }
     
     public static void main(String[] args) throws Exception {
-    	PenaltyPaymentDetailEntity test = new PenaltyPaymentDetailEntity();
+    	ViewBillingDetaillEntity test = new ViewBillingDetaillEntity();
     	String result = new String(padRightEucKrSpace("김민수", 20), "EUC-KR");
     	System.out.println(result);
     	System.out.println(result.getBytes("EUC-KR").length);

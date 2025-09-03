@@ -5,10 +5,10 @@ public final class TcpMessageTransactionCode {
     }
 	
 	//테스트 콜
-	public static final String testCallCode = "000301";
+	public static final String testCall = "000301";
 	
 	//고지내역 상세조회
-	public static final String viewBillingDetails = "121002";
+	public static final String viewBillingDetail = "121002";
 	
 	//납부결과 통지
 	public static final String paymentResultNotification = "122001";

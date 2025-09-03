@@ -4,14 +4,14 @@ import java.util.Date;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 
-import mb.fw.net.policeminwon.dto.PenaltyPaymentDetailEntity;
+import mb.fw.net.policeminwon.entity.ViewBillingDetaillEntity;
 
 /**
  * 경찰청 범칙금 - 과태료 고지내역 상세 조회
  */
-public class PenaltyPaymentDetailParser {
-	public static PenaltyPaymentDetailEntity toEntity(String data) {
-		PenaltyPaymentDetailEntity msg = new PenaltyPaymentDetailEntity();
+public class ViewBillingDetaillParser {
+	public static ViewBillingDetaillEntity toEntity(String data) {
+		ViewBillingDetaillEntity msg = new ViewBillingDetaillEntity();
         int pos = 0;
         msg.setMsgLength(data.substring(pos, pos += 4));              // 전문 길이
         msg.setJobType(data.substring(pos, pos += 3));                // 업무 구분
@@ -64,7 +64,7 @@ public class PenaltyPaymentDetailParser {
         return msg;
     }
 	
-    public static String makeResponeMessage(PenaltyPaymentDetailEntity req, PenaltyPaymentDetailEntity res, String resultCode)  throws Exception {
+    public static String makeResponeMessage(ViewBillingDetaillEntity req, ViewBillingDetaillEntity res, String resultCode)  throws Exception {
     	//응답 메시지 생성 하는 부분 - res(조회 결과) 헤더 정보 추가 하는 개념
     	res.setMsgLength(req.getMsgLength());       // 전문 길이
     	res.setJobType(req.getJobType());           // 업무 구분

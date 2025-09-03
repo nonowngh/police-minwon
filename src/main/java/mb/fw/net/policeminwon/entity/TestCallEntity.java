@@ -1,4 +1,4 @@
-package mb.fw.net.policeminwon.dto;
+package mb.fw.net.policeminwon.entity;
 
 import java.io.ByteArrayOutputStream;
 
@@ -8,7 +8,7 @@ import lombok.Data;
  * 경찰청 범칙금 - TestCall
  */
 @Data
-public class PenaltyTestCallEntity {
+public class TestCallEntity {
 	private String msgLength;           // 전문 길이
     private String jobType;             // 업무 구분
     private String orgCode;             // 기관 코드
@@ -24,9 +24,9 @@ public class PenaltyTestCallEntity {
     private String orgGiroNo;           // 이용기관 지로번호
     private String filler;              // 여분 필드
 
-    public String toFixedLengthString(PenaltyTestCallEntity req) {
+    public String toFixedLengthString(TestCallEntity req) {
         StringBuilder sb = new StringBuilder();
-        sb.append(padLeft(req.getMsgLength(), 4, '0'));             // 전문 길이
+//        sb.append(padLeft(req.getMsgLength(), 4, '0'));             // 전문 길이
         sb.append(padRight(req.getJobType(), 3, ' '));              // 업무 구분
         sb.append(padLeft(req.getOrgCode(), 3, '0'));               // 기관 코드
         sb.append(padLeft(req.getMsgType(), 4, '0'));               // 전문 종별 코드

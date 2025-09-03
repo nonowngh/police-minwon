@@ -4,15 +4,15 @@ import java.util.Date;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 
-import mb.fw.net.policeminwon.dto.PenaltyPaymentResultEntity;
+import mb.fw.net.policeminwon.entity.PaymentResultNotificationEntity;
 
 /**
  * 경찰청 범칙금 - 과태료 납부결과 통지
  */
-public class PenaltyPaymentResultParser {
+public class PaymentResultParser {
 	
-	public static PenaltyPaymentResultEntity toEntity(String data) {
-		PenaltyPaymentResultEntity msg = new PenaltyPaymentResultEntity();
+	public static PaymentResultNotificationEntity toEntity(String data) {
+		PaymentResultNotificationEntity msg = new PaymentResultNotificationEntity();
         int pos = 0;
         msg.setMsgLength(data.substring(pos, pos += 4));             // 전문 길이
         msg.setJobType(data.substring(pos, pos += 3));               // 업무 구분
@@ -48,7 +48,7 @@ public class PenaltyPaymentResultParser {
         return msg;
     }
 	
-    public static String makeResponeMessage(PenaltyPaymentResultEntity req, String resultCode) {
+    public static String makeResponeMessage(PaymentResultNotificationEntity req, String resultCode) {
     	//TODO 응답 메시지 생성 하는 부분 - request 에 추가 하는 개념
     	req.setMsgType("0210");
     	req.setRespCode(resultCode);

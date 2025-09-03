@@ -37,7 +37,7 @@ public class ProxyServer {
                  .childHandler(new ChannelInitializer<SocketChannel>() {
                      @Override
                      protected void initChannel(SocketChannel ch) {
-                    	 ch.pipeline().addLast(new mb.fw.net.common.codec.LengthFieldBasedFrameDecoder(1024, 0, 4, 0, 4, true));
+//                    	 ch.pipeline().addLast(new mb.fw.net.common.codec.LengthFieldBasedFrameDecoder(1024, 0, 4, 0, 4, true));
                          ch.pipeline().addLast(new LoggingHandler(LogLevel.INFO), new ProxyServerHandler(client));
                      }
                  });
