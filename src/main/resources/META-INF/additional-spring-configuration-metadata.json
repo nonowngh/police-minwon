@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "tcp.client.async-connction.enabled",
+    "type": "java.lang.String",
+    "description": "A description for 'tcp.client.async-connction.enabled'"
+  },
+  {
+    "name": "tcp.server.proxy.enabled",
+    "type": "java.lang.String",
+    "description": "A description for 'tcp.server.proxy.enabled'"
+  },
+  {
+    "name": "tcp.server.proxy.bind-port",
+    "type": "java.lang.String",
+    "description": "A description for 'tcp.server.proxy.bind-port'"
+  }
+]}

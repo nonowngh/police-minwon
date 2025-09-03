@@ -1,18 +1,21 @@
-atb:
-  if-config:
-    id: REST_PROVIDER_DB_01
-    description: "REST PROVIDER (Direct DB)"
-    prefix: REST_PRV
-    route-type: NONE
-    auto-config: true
 server:
-  port: 24219
+  port: 28000
+
+tcp:
+  server:
+    proxy:
+      enabled: true
+      bind-port: 9999
+  client:
+    async-connction:
+      enabled: true
+      host: 127.0.0.1
+      port: 5555
+      reconnectDelaySec: 10
+
 spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   main:
     allow-bean-definition-overriding: true
-  security:
-    user:
-      name: metabuild
-      password: meta1234!@#$
-mybatis:
-  config-location: classpath:mybatis-config.xml

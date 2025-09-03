@@ -9,6 +9,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
@@ -22,22 +24,41 @@ public class AsyncConnectionClient {
 	private int port;
 	private int reconnectDelaySec;
 
+
 	public AsyncConnectionClient(String host, int port, int reconnectDelaySec) {
 		this.host = host;
 		this.port = port;
 		this.reconnectDelaySec = reconnectDelaySec;
 	}
 
+	private static EventLoopGroup group;
 	private static volatile Channel channel;
 	private static Bootstrap bootstrap;
 
-	public void start(EventLoopGroup group) {
+	public void start() {
+		group = new NioEventLoopGroup();
+
 		bootstrap = new Bootstrap();
 		bootstrap.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			protected void initChannel(SocketChannel ch) {
 				ChannelPipeline p = ch.pipeline();
-				p.addLast(new LoggingHandler(LogLevel.INFO), new ProxyClientHandler());
+				p.addLast(new LoggingHandler(LogLevel.INFO), new SimpleChannelInboundHandler<Object>() {
+                    @Override
+                    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+                		super.channelRead(ctx, msg);
+                    }
+
+                    @Override
+                    public void channelInactive(ChannelHandlerContext ctx) {
+                        scheduleReconnect();
+                    }
+
+                    @Override
+                    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+                		super.exceptionCaught(ctx, cause);
+                    }
+                });
 			}
 		});
 
@@ -45,7 +66,9 @@ public class AsyncConnectionClient {
 	}
 
 	public void shutdown() {
-
+		if (channel != null && channel.isActive())
+			channel.close();
+		group.shutdownGracefully();
 	}
 
 	private void doConnect() {
@@ -57,7 +80,7 @@ public class AsyncConnectionClient {
 				channel = future.channel();
 				log.info("Connected to [{}:{}] server", host, port);
 			} else {
-				log.error("Failed to connect. Retrying in" + reconnectDelaySec + "seconds...");
+				log.error("Failed to connect. Retrying in " + reconnectDelaySec + " seconds...");
 				scheduleReconnect();
 			}
 		});

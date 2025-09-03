@@ -1,9 +1,11 @@
-package mb.fw.atb.tcp.server.entity;
+package mb.fw.net.policeminwon.parser;
 
 import java.util.Date;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.http.client.utils.DateUtils;
+
+import mb.fw.net.policeminwon.dto.PenaltyTestCallEntity;
 
 /**
  * 경찰청 범칙금 - TestCall
@@ -12,7 +14,7 @@ public class PenaltyTestCallParser {
     public static PenaltyTestCallEntity toEntity(String data) {
     	PenaltyTestCallEntity msg = new PenaltyTestCallEntity();
         int pos = 0;
-//        msg.setMsgLength(data.substring(pos, pos += 4));              // 전문 길이
+        msg.setMsgLength(data.substring(pos, pos += 4));              // 전문 길이
         msg.setJobType(data.substring(pos, pos += 3));                // 업무 구분
         msg.setOrgCode(data.substring(pos, pos += 3));                // 기관 코드
         msg.setMsgType(data.substring(pos, pos += 4));                // 전문 종별 코드
