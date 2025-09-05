@@ -4,6 +4,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -117,4 +118,24 @@ public class AsyncConnectionClient {
 	        }
 	    });
 	}
+	
+	public void callAsync(ChannelHandlerContext ctx, ByteBuf outBuf) {
+		try {
+			if (channel != null && channel.isActive()) {
+				channel.writeAndFlush(outBuf).awaitUninterruptibly();
+			} else {
+				ChannelFuture future = reconnectOnInactive(ctx);
+				future.awaitUninterruptibly();
+				channel = future.channel();
+				if (channel != null && channel.isActive()) {
+					channel.writeAndFlush(outBuf).awaitUninterruptibly();
+				}
+			}
+		} finally {
+			if (outBuf.refCnt() > 0) {
+				outBuf.release();
+			}
+		}
+	}
+	
 }
