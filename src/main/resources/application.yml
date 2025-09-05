@@ -1,6 +1,11 @@
 server:
   port: 28000
 
+web:
+  client:
+    enabled: true
+    target-url: http://localhost:27000/esb/mock-test
+
 tcp:
   server:
     proxy:
@@ -14,8 +19,20 @@ tcp:
       reconnectDelaySec: 10
 
 spring:
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: ENC(TdkY5c5vuDw4llaCxKBir12X/yRhf2xBZAnzN6m+ZioVuqFz+5Z8QJN30jsrhwDT)
+    password: ENC(I1YqvtB1542Z7FFWOIrm595nSO7jMF0kvOhiULJgu7URunH0MPLNAJQIwKeuTQXJ)
+  mybatis:
+    mapper-locations: classpath:mapper/*.xml
+    type-aliases-package: mb.fw.net.policeminwon.web.mapper
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+#  autoconfigure:
+#    exclude:
+#      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   main:
     allow-bean-definition-overriding: true
