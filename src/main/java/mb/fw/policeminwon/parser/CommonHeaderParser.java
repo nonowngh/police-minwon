@@ -24,7 +24,7 @@ public class CommonHeaderParser {
 			resBuf.writeBytes(ByteBufUtils.getStringfromBytebuf(reqBuf, 3, 3).getBytes()); // 기관코드(3)
 			ByteBufUtils.writeRightPaddingString(resBuf, messageTypeCode, 4); // 전문종별코드(4)
 			resBuf.writeBytes(ByteBufUtils.getStringfromBytebuf(reqBuf, 10, 6).getBytes()); // 거래구분코드(6)
-			ByteBufUtils.writeRightPaddingString(resBuf, "", 3); // 상태코드(3)
+			resBuf.writeBytes(ByteBufUtils.getStringfromBytebuf(reqBuf, 16, 3).getBytes()); // 상태코드(3)
 			resBuf.writeBytes("G".getBytes()); // 송수신FLAG(1)
 			ByteBufUtils.writeRightPaddingString(resBuf, statusCode, 3); // 응답코드(3)
 			String formattedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
@@ -51,7 +51,7 @@ public class CommonHeaderParser {
 			resBuf.writeBytes(ByteBufUtils.getStringfromBytebuf(headerBuf, 3, 3).getBytes()); // 기관코드(3)
 			ByteBufUtils.writeRightPaddingString(resBuf, messageTypeCode, 4); // 전문종별코드(4)
 			resBuf.writeBytes(ByteBufUtils.getStringfromBytebuf(headerBuf, 10, 6).getBytes()); // 거래구분코드(6)
-			ByteBufUtils.writeRightPaddingString(resBuf, "", 3); // 상태코드(3)
+			resBuf.writeBytes(ByteBufUtils.getStringfromBytebuf(headerBuf, 16, 3).getBytes()); // 상태코드(3)
 			resBuf.writeBytes("G".getBytes()); // 송수신FLAG(1)
 			ByteBufUtils.writeRightPaddingString(resBuf, statusCode, 3); // 응답코드(3)
 //			String formattedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
