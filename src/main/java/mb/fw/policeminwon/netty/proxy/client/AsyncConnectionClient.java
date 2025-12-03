@@ -1,5 +1,6 @@
 package mb.fw.policeminwon.netty.proxy.client;
 
+import java.net.ConnectException;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -144,7 +145,7 @@ public class AsyncConnectionClient {
 				ChannelFuture future = reconnectOnInactive();
 				future.awaitUninterruptibly();
 				if (!future.isSuccess()) {
-					throw new Exception("Connection failed to [" + host + ":" + port + "]");
+					throw new ConnectException("Connection failed to [" + host + ":" + port + "]");
 				}
 				channel = future.channel();
 				if (channel != null && channel.isActive()) {

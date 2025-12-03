@@ -1,11 +1,14 @@
 package mb.fw.policeminwon.filter;
 
+import java.net.ConnectException;
+
 import org.springframework.jms.core.JmsTemplate;
 
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
 import mb.fw.atb.util.ATBUtil;
 import mb.fw.policeminwon.constants.TcpCommonSettingConstants;
+import mb.fw.policeminwon.constants.TcpStatusCode;
 import mb.fw.policeminwon.spec.InterfaceSpec;
 import mb.fw.policeminwon.utils.CommonLoggingUtils;
 import reactor.core.publisher.Mono;
@@ -49,8 +52,16 @@ public class TcpHandlerLoggingFilter {
 			} catch (Exception e) {
 				log.error("JMS end logging error!!!", e);
 			}
-		}).onErrorResume(error -> Mono.empty()).doFinally(signalType -> {
+			if (error instanceof ConnectException) {
+				CommonLoggingUtils.loggingTcpResponse(TcpStatusCode.RESPONSE_SYSTEM_CONNECTION_ERROR.getCode(),
+						esbTxId);
+			} else {
+				CommonLoggingUtils.loggingTcpResponse(TcpStatusCode.UNKNOWN_ERROR.getCode(), esbTxId);
+			}
+		}).doOnSuccess(result -> {
 			CommonLoggingUtils.loggingTcpResponse(responseCode, esbTxId);
+		}).onErrorResume(error -> Mono.empty()).doFinally(signalType -> {
+//			CommonLoggingUtils.loggingTcpResponse(responseCode, esbTxId);
 			log.info("===[{}] 처리 종료===", esbTxId);
 		});
 	}

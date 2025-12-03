@@ -33,7 +33,11 @@ public enum TcpStatusCode {
 	UNIQUE_REGISTRATION_NUMBER("340", "주민(사업자) 등록번호 오류"),
 	PAYMENT_AMOUNT_ERROR("343", "납부 금액 오류"),
 	COLLECTOR_ACCOUNT_NUMBER_ERROR("361", "징수관 계좌번호 오류"),
-	UNAVAILABLE_PAYMENT_DEADLINE_EXPIRED("364", "납부 기한 경과로 납부 불가");
+	UNAVAILABLE_PAYMENT_DEADLINE_EXPIRED("364", "납부 기한 경과로 납부 불가"),
+	
+	/* 그외 오류 */
+	RESPONSE_SYSTEM_CONNECTION_ERROR("990", "타겟시스템 통신 오류"),
+	UNKNOWN_ERROR("999", "그외 오류");
 
 	@Getter
 	private final String code;

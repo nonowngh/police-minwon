@@ -1,8 +1,5 @@
 package mb.fw.policeminwon.parser;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.extern.slf4j.Slf4j;
@@ -27,13 +24,14 @@ public class CommonHeaderParser {
 			resBuf.writeBytes(ByteBufUtils.getStringfromBytebuf(reqBuf, 16, 3).getBytes()); // 상태코드(3)
 			resBuf.writeBytes("G".getBytes()); // 송수신FLAG(1)
 			ByteBufUtils.writeRightPaddingString(resBuf, statusCode, 3); // 응답코드(3)
-			String formattedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
-			ByteBufUtils.writeRightPaddingString(resBuf, formattedTime, 12); // 전송일시(12)
+//			String formattedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+//			ByteBufUtils.writeRightPaddingString(resBuf, formattedTime, 12); // 전송일시(12)
+			resBuf.writeBytes(ByteBufUtils.getStringfromBytebuf(reqBuf, 23, 12).getBytes()); // 전송일시(12)
 			resBuf.writeBytes(ByteBufUtils.getStringfromBytebuf(reqBuf, 35, 12).getBytes()); // 센터전문관리번호(12)
 			ByteBufUtils.writeRightPaddingString(resBuf, policeTransactionId, 12); // 이용기관전문관리번호(12)
 			resBuf.writeBytes(ByteBufUtils.getStringfromBytebuf(reqBuf, 59, 2).getBytes()); // 이용기관발행기관분류코드(2)
 			resBuf.writeBytes(ByteBufUtils.getStringfromBytebuf(reqBuf, 61, 7).getBytes()); // 이용기관지로번호(7)
-			ByteBufUtils.writeRightPaddingString(resBuf, "", 2); // 필러(2)
+			resBuf.writeBytes(ByteBufUtils.getStringfromBytebuf(reqBuf, 68, 2).getBytes()); // 필러(2)
 		} catch (Exception e) {
 			log.warn("make response bytebuf error -> [{}]", e.getMessage());
 			ByteBufUtils.writeRightPaddingString(resBuf, "", (HEADER_LENGTH - 4 - resBuf.readableBytes()));
@@ -61,7 +59,8 @@ public class CommonHeaderParser {
 			ByteBufUtils.writeRightPaddingString(resBuf, policeTransactionId, 12); // 이용기관전문관리번호(12)
 			resBuf.writeBytes(ByteBufUtils.getStringfromBytebuf(headerBuf, 59, 2).getBytes()); // 이용기관발행기관분류코드(2)
 			resBuf.writeBytes(ByteBufUtils.getStringfromBytebuf(headerBuf, 61, 7).getBytes()); // 이용기관지로번호(7)
-			ByteBufUtils.writeRightPaddingString(resBuf, "", 2); // 필러(2)
+			resBuf.writeBytes(ByteBufUtils.getStringfromBytebuf(headerBuf, 68, 2).getBytes()); // 필러(2)
+//			ByteBufUtils.writeRightPaddingString(resBuf, "", 2); // 필러(2)
 		} catch (Exception e) {
 			log.warn("make response bytebuf error -> [{}]", e.getMessage(), e);
 			ByteBufUtils.writeRightPaddingString(resBuf, "", (HEADER_LENGTH - 4 - resBuf.readableBytes()));
