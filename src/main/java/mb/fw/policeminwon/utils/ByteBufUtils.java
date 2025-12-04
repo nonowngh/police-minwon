@@ -52,10 +52,31 @@ public class ByteBufUtils {
 	        }
 	    }
 	}
+	public static void writeRightPaddingString(ByteBuf buf, String value, int fixedLength, boolean isPrint) {
+		byte[] rawBytes = value.getBytes(TcpCommonSettingConstants.MESSAGE_CHARSET);
+		int paddingLength = fixedLength - rawBytes.length;
+		int initBufLength = buf.readableBytes();
+		if (paddingLength < 0) {
+			buf.writeBytes(Arrays.copyOf(rawBytes, fixedLength));
+		} else {
+			buf.writeBytes(rawBytes);
+			for (int i = 0; i < paddingLength; i++) {
+				buf.writeByte(' '); // ASCII space padding
+			}
+		}
+		if(isPrint) CommonLoggingUtils.printFieldInfo(buf.toString(initBufLength, fixedLength, TcpCommonSettingConstants.MESSAGE_CHARSET), fixedLength);
+	}
 	
 	public static void writeLeftPaddingNumber(ByteBuf buf, int value, int fixedLength) {
 	    String numberStr = String.format("%0" + fixedLength + "d", value);
 	    buf.writeBytes(numberStr.getBytes(StandardCharsets.US_ASCII));
+	}
+	public static void writeLeftPaddingNumber(ByteBuf buf, int value, int fixedLength, boolean isPrint) {
+		int initBufLength = buf.readableBytes();
+		String numberStr = String.format("%0" + fixedLength + "d", value);
+		buf.writeBytes(numberStr.getBytes(StandardCharsets.US_ASCII));
+		if(isPrint) CommonLoggingUtils.printFieldInfo(buf.toString(initBufLength, fixedLength, TcpCommonSettingConstants.MESSAGE_CHARSET), fixedLength);
+
 	}
 	
 	public static ByteBuf addMessageLength(ByteBuf messageBuf) {

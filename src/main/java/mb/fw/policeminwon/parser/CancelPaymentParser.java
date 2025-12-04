@@ -1,5 +1,7 @@
 package mb.fw.policeminwon.parser;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import mb.fw.policeminwon.constants.TcpCommonSettingConstants;
@@ -26,15 +28,15 @@ public class CancelPaymentParser {
 
 	public static String toMessage(CancelPaymentBody entity) {
 		ByteBuf buf = Unpooled.buffer();		
-		ByteBufUtils.writeLeftPaddingNumber(buf, Integer.valueOf(entity.getRoffFncInstCd()), 7);
-	    ByteBufUtils.writeRightPaddingString(buf, entity.getRealPayerRrno(), 13);
-	    ByteBufUtils.writeRightPaddingString(buf, entity.getCentTranNo(), 12);
-	    ByteBufUtils.writeRightPaddingString(buf, entity.getOrgdlTrsmDt(), 12);
-	    ByteBufUtils.writeRightPaddingString(buf, "", 16);
-	    ByteBufUtils.writeLeftPaddingNumber(buf, Integer.valueOf(entity.getOrgdlPayAmt()), 15);
-	    ByteBufUtils.writeRightPaddingString(buf, entity.getRtrcnRsn(), 1);
-	    ByteBufUtils.writeRightPaddingString(buf, entity.getOrgdlPayCd(), 1);
-	    ByteBufUtils.writeRightPaddingString(buf, "", 9);
+		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getRoffFncInstCd(), 0), 7, true);
+	    ByteBufUtils.writeRightPaddingString(buf, entity.getRealPayerRrno(), 13, true);
+	    ByteBufUtils.writeRightPaddingString(buf, entity.getCentTranNo(), 12, true);
+	    ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getOrgdlTrsmDt(), 0), 12, true);
+	    ByteBufUtils.writeRightPaddingString(buf, "", 16, true);
+	    ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getOrgdlPayAmt(), 0), 15, true);
+	    ByteBufUtils.writeRightPaddingString(buf, entity.getRtrcnRsn(), 1, true);
+	    ByteBufUtils.writeRightPaddingString(buf, entity.getOrgdlPayCd(), 1, true);
+	    ByteBufUtils.writeRightPaddingString(buf, "", 9, true);
 	    return buf.toString(TcpCommonSettingConstants.MESSAGE_CHARSET);
 	}
 }

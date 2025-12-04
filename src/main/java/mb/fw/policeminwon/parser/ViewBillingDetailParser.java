@@ -1,5 +1,7 @@
 package mb.fw.policeminwon.parser;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.extern.slf4j.Slf4j;
@@ -59,40 +61,40 @@ public class ViewBillingDetailParser {
 
 	public static String toMessage(ViewBillingDetailBody entity) {
 		ByteBuf buf = Unpooled.buffer();
-		ByteBufUtils.writeRightPaddingString(buf, entity.getEltrPymNo(), 19);
-		ByteBufUtils.writeRightPaddingString(buf, "", 20);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getRandNo(), 32);
-		ByteBufUtils.writeRightPaddingString(buf, "", 32);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getUserType(), 1);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getUserRrno(), 13);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getUserBznNo(), 10);
-		ByteBufUtils.writeRightPaddingString(buf, "", 3);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getUserFulnm(), 40);
-		ByteBufUtils.writeRightPaddingString(buf, "", 10);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getUserRrno2(), 13);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getWrintNo(), 15);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getFineType(), 1);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getJrdtPlstNm(), 20);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getPcptaxColctrAcno(), 6);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getPcptaxColctrSmallAcnutCd(), 1);
-		ByteBufUtils.writeLeftPaddingNumber(buf, Integer.valueOf(entity.getBtddtAmt()), 15);
-		ByteBufUtils.writeLeftPaddingNumber(buf, Integer.valueOf(entity.getAftdteAmt()), 15);
-		ByteBufUtils.writeLeftPaddingNumber(buf, Integer.valueOf(entity.getIncmeMokCd()), 7);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getAccnutYr(), 4);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getBtddtPymTmlmtDt(), 8);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getAftdtePymYmlmtDt(), 8);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getFineCauseDate(), 14);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getViolDate(), 14);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getViolPlace(), 40);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getViolDtl(), 100);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getViolCarNo(), 20);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getLawNm(), 100);
-		ByteBufUtils.writeRightPaddingString(buf, "", 7);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getPayDt(), 14);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getDedtClCd(), 1);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getPayerRealFulnm(), 8);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getCardPymPsbyYn(), 1);
-		ByteBufUtils.writeRightPaddingString(buf, "", 18);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getEltrPymNo(), 19, true);
+		ByteBufUtils.writeRightPaddingString(buf, "", 20, true);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getRandNo(), 32, true);
+		ByteBufUtils.writeRightPaddingString(buf, "", 32, true);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getUserType(), 1, true);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getUserRrno(), 13, true);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getUserBznNo(), 10, true);
+		ByteBufUtils.writeRightPaddingString(buf, "", 3, true);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getUserFulnm(), 40, true);
+		ByteBufUtils.writeRightPaddingString(buf, "", 10, true);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getUserRrno2(), 13, true);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getWrintNo(), 15, true);
+		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getFineType(), 0), 1, true);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getJrdtPlstNm(), 20, true);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getPcptaxColctrAcno(), 6, true);
+		ByteBufUtils.writeLeftPaddingNumber(buf,  NumberUtils.toInt(entity.getPcptaxColctrSmallAcnutCd(), 0), 1, true);
+		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getBtddtAmt(), 0), 15, true);
+		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getAftdteAmt(), 0), 15, true);
+		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getIncmeMokCd(), 0), 7, true);
+		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getAccnutYr(), 0), 4, true);
+		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getBtddtPymTmlmtDt(), 0), 8, true);
+		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getAftdtePymYmlmtDt(), 0), 8, true);
+		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getFineCauseDate(), 0), 14, true);
+		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getViolDate(), 0), 14, true);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getViolPlace(), 40, true);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getViolDtl(), 100, true);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getViolCarNo(), 20, true);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getLawNm(), 100, true);
+		ByteBufUtils.writeRightPaddingString(buf, "", 7, true);
+		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getPayDt(), 0), 14, true);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getDedtClCd(), 1, true);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getPayerRealFulnm(), 8, true);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getCardPymPsbyYn(), 1, true);
+		ByteBufUtils.writeRightPaddingString(buf, "", 18, true);
 		return buf.toString(TcpCommonSettingConstants.MESSAGE_CHARSET);
 	}
 }

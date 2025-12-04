@@ -1,7 +1,9 @@
 package mb.fw.policeminwon.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import mb.fw.policeminwon.configuration.TcpCommonConfiguration;
 import mb.fw.policeminwon.constants.SystemCodeConstants;
+import mb.fw.policeminwon.constants.TcpCommonSettingConstants;
 import mb.fw.policeminwon.constants.TcpStatusCode;
 
 @Slf4j
@@ -24,5 +26,9 @@ public class CommonLoggingUtils {
 		} else {
 			log.info("{} - bypass...[{}] -> [{}] | esb-tran-id({})", description, from, to, esbTxId);
 		}
+	}
+	
+	public static void printFieldInfo(String message, int length) {
+		log.debug("message : [{}], length : {}", message, length);
 	}
 }
