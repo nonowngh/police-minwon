@@ -12,6 +12,8 @@ import io.netty.util.internal.logging.InternalLoggerFactory;
 @Configuration
 public class NettyLoggerConfiguration {
 
+    private static final String TESTCALL_PREFIX = "0070IGN0990800000301";
+
 	@PostConstruct
 	public void init() {
 		InternalLoggerFactory.setDefaultFactory(new ChannelEventsLoggerFactory());
@@ -27,7 +29,7 @@ public class NettyLoggerConfiguration {
 
 				private boolean isChannelEvent(String msg) {
 					return msg != null
-							&& (msg.contains("REGISTERED") || msg.contains("ACTIVE") || msg.contains("READ COMPLETE"));
+							&& (msg.contains("REGISTERED") || msg.contains("ACTIVE") || msg.contains("READ COMPLETE") || msg.contains(TESTCALL_PREFIX));
 				}
 
 				private InternalLogLevel adjustLevel(InternalLogLevel level, String msg) {
@@ -46,34 +48,79 @@ public class NettyLoggerConfiguration {
 					}
 				}
 
-				@Override
-				public void log(InternalLogLevel level, String msg, Object param1) {
-					log(level, msg);
-				}
+//				@Override
+//				public void log(InternalLogLevel level, String msg, Object param1) {
+//					log(level, msg);
+//				}
 
-				@Override
-				public void log(InternalLogLevel level, String msg, Object param1, Object param2) {
-					log(level, msg);
-				}
+//				@Override
+//				public void log(InternalLogLevel level, String msg, Object param1, Object param2) {
+//					log(level, msg);
+//				}
 
-				@Override
-				public void log(InternalLogLevel level, String msg, Object[] params) {
-					log(level, msg);
-				}
+//				@Override
+//				public void log(InternalLogLevel level, String msg, Object[] params) {
+//					log(level, msg);
+//				}
 
-				@Override
-				public void log(InternalLogLevel level, String msg, Throwable t) {
-					slf4jLogger.info(msg, t);
-				}
+//				@Override
+//				public void log(InternalLogLevel level, String msg, Throwable t) {
+//					slf4jLogger.info(msg, t);
+//				}
 
 				@Override
 				public void log(InternalLogLevel level, Throwable t) {
 					slf4jLogger.info("Exception", t);
 				}
+				
+				@Override
+				public void log(InternalLogLevel level, String format, Object... arguments) {
+				    String msg = org.slf4j.helpers.MessageFormatter
+				            .arrayFormat(format, arguments)
+				            .getMessage();
+				    log(level, msg);
+				}
+				
+				@Override
+				public void log(InternalLogLevel level, String msg, Throwable t) {
+				    if (adjustLevel(level, msg) == InternalLogLevel.DEBUG) {
+				        slf4jLogger.debug(msg, t);
+				    } else {
+				        slf4jLogger.info(msg, t);
+				    }
+				}
+				
+				@Override
+				public void log(InternalLogLevel level, String format, Object arg) {
+				    log(level, format, new Object[]{arg});
+				}
+				
+				@Override
+				public void log(InternalLogLevel level, String format, Object arg1, Object arg2) {
+				    log(level, format, new Object[]{arg1, arg2});
+				}
 
+//				@Override
+//				public boolean isEnabled(InternalLogLevel level) {
+//					return true;
+//				}
+				
 				@Override
 				public boolean isEnabled(InternalLogLevel level) {
-					return true;
+				    switch (level) {
+				        case TRACE:
+				            return slf4jLogger.isTraceEnabled();
+				        case DEBUG:
+				            return slf4jLogger.isDebugEnabled();
+				        case INFO:
+				            return slf4jLogger.isInfoEnabled();
+				        case WARN:
+				            return slf4jLogger.isWarnEnabled();
+				        case ERROR:
+				            return slf4jLogger.isErrorEnabled();
+				        default:
+				            return true;
+				    }
 				}
 
 				@Override

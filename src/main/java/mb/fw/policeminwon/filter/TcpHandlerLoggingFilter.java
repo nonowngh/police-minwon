@@ -31,10 +31,17 @@ public class TcpHandlerLoggingFilter {
 		String from = interfaceSpec.getSndCode();
 		String to = interfaceSpec.getRcvCode();
 		String description = interfaceSpec.getDescription();
-		CommonLoggingUtils.logTransaction(description, from, to, esbTxId);
+		// '테스트콜' 로그레벨 debug
+		boolean isLogLevelDebug = interfaceSpec.getInterfaceId().endsWith("_00");
+		CommonLoggingUtils.logTransaction(description, from, to, esbTxId, isLogLevelDebug);
 		String message = messageBuf.toString(TcpCommonSettingConstants.MESSAGE_CHARSET);
 
-		return action.doOnSubscribe(res -> log.info("===[{}] 처리 시작===", esbTxId)).doOnSuccess(res -> {
+		return action.doOnSubscribe(res -> {
+			if (isLogLevelDebug)
+				log.debug("===[{}] 처리 시작===", esbTxId);
+			else
+				log.info("===[{}] 처리 시작===", esbTxId);
+		}).doOnSuccess(res -> {
 			try {
 				if (jmsTemplate != null && interfaceSpec.isLogging()) {
 					ATBUtil.endLogging(jmsTemplate, interfaceSpec.getInterfaceId(), esbTxId, "", 0, "S", message, null);
@@ -61,8 +68,11 @@ public class TcpHandlerLoggingFilter {
 		}).doOnSuccess(result -> {
 			CommonLoggingUtils.loggingTcpResponse(responseCode, esbTxId);
 		}).onErrorResume(error -> Mono.empty()).doFinally(signalType -> {
+			if (isLogLevelDebug)
+				log.debug("===[{}] 처리 종료===", esbTxId);
+			else
+				log.info("===[{}] 처리 종료===", esbTxId);
 //			CommonLoggingUtils.loggingTcpResponse(responseCode, esbTxId);
-			log.info("===[{}] 처리 종료===", esbTxId);
 		});
 	}
 

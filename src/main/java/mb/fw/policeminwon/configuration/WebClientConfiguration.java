@@ -1,9 +1,10 @@
 package mb.fw.policeminwon.configuration;
 
+import java.time.Duration;
+
 import javax.net.ssl.SSLException;
 
 import org.apache.http.HttpHeaders;
-import org.crsh.console.jline.internal.Log;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -29,10 +30,15 @@ public class WebClientConfiguration {
 
 	private String callBackUrl;
 
+	private int responseTimeoutSeconds = 30;
+
 	@Bean(name = "webClient")
 	WebClient webClient() {
+
+		HttpClient httpClient = HttpClient.create().responseTimeout(Duration.ofSeconds(responseTimeoutSeconds));
+
 		if (targetUrl.startsWith("https://")) {
-			HttpClient httpClient = HttpClient.create().secure(ssl -> {
+			httpClient = httpClient.secure(ssl -> {
 				try {
 					ssl.sslContext(
 							SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build());
@@ -40,10 +46,8 @@ public class WebClientConfiguration {
 					log.error("sslContext error!");
 				}
 			});
-			return WebClient.builder().clientConnector(new ReactorClientHttpConnector(httpClient)).baseUrl(targetUrl)
-					.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).build();
 		}
-		return WebClient.builder().baseUrl(targetUrl)
+		return WebClient.builder().clientConnector(new ReactorClientHttpConnector(httpClient)).baseUrl(targetUrl)
 				.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).build();
 	}
 
