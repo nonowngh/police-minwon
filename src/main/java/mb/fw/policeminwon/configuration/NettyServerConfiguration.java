@@ -27,7 +27,7 @@ public class NettyServerConfiguration {
 		private int bindPort;
 		private String directTestCallReturn = null;
 	}
-
+	
 	@Bean(initMethod = "start", destroyMethod = "shutdown")
 	@ConditionalOnProperty(prefix = "tcp.server.proxy", name = "enabled", havingValue = "true")
 	ProxyServer proxyServer(List<AsyncConnectionClient> clients,

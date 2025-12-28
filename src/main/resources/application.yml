@@ -28,6 +28,12 @@ tcp:
           host: 127.0.0.1
           port: 9999
           reconnect-delay-sec: 3600000
+kftc:
+  history :
+#    enabled : true
+    insert-sql:
+    select-sql:
+           
 jms:
   logging:
     enabled: false

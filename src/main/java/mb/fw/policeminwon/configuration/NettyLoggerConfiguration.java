@@ -12,7 +12,7 @@ import io.netty.util.internal.logging.InternalLoggerFactory;
 @Configuration
 public class NettyLoggerConfiguration {
 
-    private static final String TESTCALL_PREFIX = "0070IGN0990800000301";
+    private static final String TESTCALL_PREFIX = "0070IGN09908";
 
 	@PostConstruct
 	public void init() {
@@ -29,7 +29,7 @@ public class NettyLoggerConfiguration {
 
 				private boolean isChannelEvent(String msg) {
 					return msg != null
-							&& (msg.contains("REGISTERED") || msg.contains("ACTIVE") || msg.contains("READ COMPLETE") || msg.contains(TESTCALL_PREFIX));
+							&& (msg.contains("REGISTERED") || msg.contains("ACTIVE") || msg.contains("READ COMPLETE") || msg.contains("FLUSH") || msg.contains(TESTCALL_PREFIX));
 				}
 
 				private InternalLogLevel adjustLevel(InternalLogLevel level, String msg) {

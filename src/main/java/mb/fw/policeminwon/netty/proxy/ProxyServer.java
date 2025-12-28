@@ -18,7 +18,9 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
+import mb.fw.policeminwon.configuration.KftcHistoryProperties;
 import mb.fw.policeminwon.constants.TcpCommonSettingConstants;
+import mb.fw.policeminwon.history.service.KftcNotificationHistoryService;
 import mb.fw.policeminwon.netty.proxy.client.AsyncConnectionClient;
 import mb.fw.policeminwon.netty.proxy.logging.PrettyLoggingHandler;
 import mb.fw.policeminwon.spec.InterfaceSpecList;
@@ -35,10 +37,18 @@ public class ProxyServer {
 	@Qualifier("esbJmsTemplate")
 	JmsTemplate esbJmsTemplate;
 
+	@Autowired(required = false)
+	KftcHistoryProperties historyProperties;
+
 	private int bindPort;
 	private final List<AsyncConnectionClient> clients;
 	private InterfaceSpecList interfaceSpecList;
 	private String directTestCallReturn;
+
+	@Autowired(required = false)
+	KftcNotificationHistoryService notificationHistoryService;
+
+	private static ProxyServerHandler SERVER_HANDLER = null;
 
 	public ProxyServer(int bindPort, List<AsyncConnectionClient> clients, Optional<WebClient> optionalWebClient,
 			InterfaceSpecList interfaceSpecList, String directTestCallReturn) {
@@ -52,6 +62,12 @@ public class ProxyServer {
 	public void start() {
 		bossGroup = new NioEventLoopGroup(1);
 		workerGroup = new NioEventLoopGroup();
+		SERVER_HANDLER = historyProperties != null
+				? new ProxyServerHandler(clients, webClient, interfaceSpecList,
+						esbJmsTemplate, directTestCallReturn,
+						notificationHistoryService)
+				: new ProxyServerHandler(clients, webClient, interfaceSpecList,
+						esbJmsTemplate, directTestCallReturn, null); 
 		Thread serverThread = new Thread(() -> {
 			try {
 				ServerBootstrap b = new ServerBootstrap();
@@ -68,8 +84,13 @@ public class ProxyServer {
 //										TcpCommonSettingConstants.PRETTY_LOGGING
 //												? new PrettyLoggingHandler(LogLevel.INFO)
 //												: new LoggingHandler(LogLevel.INFO),
-										new ProxyServerHandler(clients, webClient, interfaceSpecList, esbJmsTemplate,
-												directTestCallReturn));
+										SERVER_HANDLER);
+//										historyProperties != null
+//												? new ProxyServerHandler(clients, webClient, interfaceSpecList,
+//														esbJmsTemplate, directTestCallReturn,
+//														notificationHistoryService)
+//												: new ProxyServerHandler(clients, webClient, interfaceSpecList,
+//														esbJmsTemplate, directTestCallReturn, null));
 							}
 						});
 

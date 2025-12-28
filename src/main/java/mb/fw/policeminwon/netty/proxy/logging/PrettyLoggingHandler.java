@@ -16,8 +16,9 @@ public class PrettyLoggingHandler extends LoggingHandler {
 	protected String format(ChannelHandlerContext ctx, String eventName, Object arg) {
 		if (arg instanceof ByteBuf) {
 			ByteBuf buf = (ByteBuf) arg;
+			int length = buf.readableBytes(); 
 			String content = buf.toString(TcpCommonSettingConstants.MESSAGE_CHARSET);
-			return String.format("[%s] %s: %s", ctx.channel().id(), eventName, content);
+			return String.format("[%s] %s: %s [%d]", ctx.channel().id(), eventName, content, length);
 		}
 		return super.format(ctx, eventName, arg);
 	}
