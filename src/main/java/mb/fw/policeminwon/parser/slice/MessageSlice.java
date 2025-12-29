@@ -83,6 +83,11 @@ public class MessageSlice {
 	public static String getElecPayNoPaymentResultNotificationWrite(ByteBuf buf) {
 		return ByteBufUtils.getStringfromBytebuf(buf, (HEADER_LENGTH + 4) + 19, 19);
 	}
+	
+	// 취소전문 원거래 센터번호
+	public static String getOriginalCenterTxId(ByteBuf buf) {
+		return ByteBufUtils.getStringfromBytebuf(buf, (HEADER_LENGTH) + 20, 12);
+	}
 
 	// 바디 정보(body length 630)
 	public static String getVeiwBillingDetailTotalBody(ByteBuf buf) {

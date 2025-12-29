@@ -108,19 +108,20 @@ public class ProxyServerHandler extends ChannelInboundHandlerAdapter {
 				}
 			}
 
-			String centerTxId = MessageSlice.getCenterTxId(inBuf);
 			// 취소 인터페이스 송수신 시스템 구분
 			if (TcpHeaderTransactionCode.CANCEL_PAYMENT.equals(tcpHeaderTransactionCode)) {
+				String oriCenterTxId = MessageSlice.getOriginalCenterTxId(inBuf);
 				// 통지 이력 확인
 				if (notificationHistoryService != null) {
 					if (SystemCodeConstants.KFTC.equals(sndCode))
-						rcvCode = notificationHistoryService.get(centerTxId);
+						rcvCode = notificationHistoryService.get(oriCenterTxId);
 					else
-						sndCode = notificationHistoryService.get(centerTxId);
+						sndCode = notificationHistoryService.get(oriCenterTxId);
 				}
-				log.debug("취소 전문 수신 시스템 -> " + rcvCode);
+				log.debug("취소 전문 수신 시스템 -> {}, 원거래 센터번호 : {}", rcvCode, oriCenterTxId);
 			}
 
+			String centerTxId = MessageSlice.getCenterTxId(inBuf);
 			String responseCode = MessageSlice.getResponseCode(inBuf);
 			String reqMsgDateTime = MessageSlice.getSendTime(inBuf);
 			String nowDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
