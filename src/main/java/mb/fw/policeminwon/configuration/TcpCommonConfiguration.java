@@ -19,6 +19,7 @@ public class TcpCommonConfiguration {
 
 	private String encoding = "euc-kr";
 	private boolean prettyLogging = true;
+	private boolean saveMessagePretty = false;
 
 	@PostConstruct
 	public void init() {
@@ -27,6 +28,7 @@ public class TcpCommonConfiguration {
 		log.info("Setting Default Charset : " + TcpCommonSettingConstants.MESSAGE_CHARSET.name());
 		// set tcp message pretty logging...
 		TcpCommonSettingConstants.PRETTY_LOGGING = prettyLogging;
+		TcpCommonSettingConstants.SAVE_MESSAGE_PRETTY = saveMessagePretty;
 	}
 
 }

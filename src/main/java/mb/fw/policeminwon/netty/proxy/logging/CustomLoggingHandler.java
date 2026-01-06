@@ -50,7 +50,7 @@ public class CustomLoggingHandler extends LoggingHandler {
 					String policeSystemCode = TcpHeaderTransactionCode.VIEW_BILLING_DETAIL
 							.equals(tcpHeaderTransactionCode) ? MessageSlice.getElecPayNoViewBillingDetailWrite(buf)
 									: MessageSlice.getElecPayNoPaymentResultNotificationWrite(buf);
-					if (policeSystemCode.startsWith(TcpMessageConstants.getSJSElecNumType())) {
+					if (TcpMessageConstants.isSummary(policeSystemCode)) {
 						systemName = "ESB PROXY";
 					}
 				}
@@ -79,7 +79,7 @@ public class CustomLoggingHandler extends LoggingHandler {
 					String policeSystemCode = TcpHeaderTransactionCode.VIEW_BILLING_DETAIL
 							.equals(tcpHeaderTransactionCode) ? MessageSlice.getElecPayNoViewBillingDetailWrite(buf)
 									: MessageSlice.getElecPayNoPaymentResultNotificationWrite(buf);
-					if (policeSystemCode.startsWith(TcpMessageConstants.getSJSElecNumType())) {
+					if (TcpMessageConstants.isSummary(policeSystemCode)) {
 						systemName = "ESB PROXY";
 					}
 				}

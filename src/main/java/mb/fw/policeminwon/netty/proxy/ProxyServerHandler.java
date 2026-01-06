@@ -55,7 +55,7 @@ import reactor.core.publisher.Mono;
 public class ProxyServerHandler extends ChannelInboundHandlerAdapter {
 
 	static final String USE_ORG_CODE_SUFFIX = "0PL0";
-	
+
 	private static ObjectMapper mapper = new ObjectMapper();
 
 	private final List<AsyncConnectionClient> clients;
@@ -102,7 +102,7 @@ public class ProxyServerHandler extends ChannelInboundHandlerAdapter {
 				eltcPymNo = TcpHeaderTransactionCode.VIEW_BILLING_DETAIL.equals(tcpHeaderTransactionCode)
 						? MessageSlice.getElecPayNoViewBillingDetail(inBuf)
 						: MessageSlice.getElecPayNoPaymentResultNotification(inBuf);
-				if (eltcPymNo.startsWith(TcpMessageConstants.getSJSElecNumType())) {
+				if (TcpMessageConstants.isSummary(eltcPymNo)) {
 					if (SystemCodeConstants.KFTC.equals(sndCode))
 						rcvCode = SystemCodeConstants.SUMMRAY;
 					else

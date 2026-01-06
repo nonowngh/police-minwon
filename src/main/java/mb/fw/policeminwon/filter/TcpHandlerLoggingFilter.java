@@ -7,10 +7,10 @@ import org.springframework.jms.core.JmsTemplate;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
 import mb.fw.atb.util.ATBUtil;
-import mb.fw.policeminwon.constants.TcpCommonSettingConstants;
 import mb.fw.policeminwon.constants.TcpStatusCode;
 import mb.fw.policeminwon.spec.InterfaceSpec;
 import mb.fw.policeminwon.utils.CommonLoggingUtils;
+import mb.fw.policeminwon.utils.TcpMessageUtils;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -34,8 +34,9 @@ public class TcpHandlerLoggingFilter {
 		// '테스트콜' 로그레벨 debug
 		boolean isLogLevelDebug = interfaceSpec.getInterfaceId().endsWith("_00");
 		CommonLoggingUtils.logTransaction(description, from, to, esbTxId, isLogLevelDebug);
-		String message = messageBuf.toString(TcpCommonSettingConstants.MESSAGE_CHARSET);
-
+//		String message = messageBuf.toString(TcpCommonSettingConstants.MESSAGE_CHARSET);
+		String message = TcpMessageUtils.saveHistoryMessage(messageBuf);
+		
 		return action.doOnSubscribe(res -> {
 			if (isLogLevelDebug)
 				log.debug("===[{}] 처리 시작===", esbTxId);

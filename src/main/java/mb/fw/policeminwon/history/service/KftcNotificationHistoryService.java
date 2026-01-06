@@ -32,7 +32,7 @@ public class KftcNotificationHistoryService {
 			return SystemCodeConstants.TRAFFIC;
 		}
 		String eltrPymNo = result.getElectronicPaymentNo();
-		if (eltrPymNo.startsWith(TcpMessageConstants.getSJSElecNumType())) {
+		if (TcpMessageConstants.isSummary(eltrPymNo)) {
 			return SystemCodeConstants.SUMMRAY;
 		}
 		return SystemCodeConstants.TRAFFIC;
