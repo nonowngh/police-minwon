@@ -126,7 +126,7 @@ public class AsyncConnectionClient {
 	}
 
 	public ChannelFuture reconnectOnInactive() {
-		log.error("Disconnected from [{}:{}] server. Will attempt reconnect...", host, port);
+		log.warn("Disconnected from [{}:{}] server. Will attempt reconnect...", host, port);
 		return bootstrap.connect(host, port).addListener((ChannelFutureListener) future -> {
 			if (future.isSuccess()) {
 				channel = future.channel();

@@ -54,6 +54,8 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class ProxyServerHandler extends ChannelInboundHandlerAdapter {
 
+	static final String USE_ORG_CODE_SUFFIX = "0PL0";
+	
 	private static ObjectMapper mapper = new ObjectMapper();
 
 	private final List<AsyncConnectionClient> clients;
@@ -190,7 +192,7 @@ public class ProxyServerHandler extends ChannelInboundHandlerAdapter {
 	private Mono<Void> cancelProcess(ByteBuf inBuf, InterfaceSpec interfaceSpec, String esbTxId) {
 		String rcvSystemCode = interfaceSpec.getRcvCode();
 		if (SystemCodeConstants.SUMMRAY.equals(rcvSystemCode)) {
-			String useOrgTxId = esbTxId.substring(esbTxId.length() - 12);
+			String useOrgTxId = USE_ORG_CODE_SUFFIX + esbTxId.substring(esbTxId.length() - 8);
 			String bodyMessage = MessageSlice.getCancelPaymentTotalBody(inBuf);
 			CancelPaymentBody reqBody = CancelPaymentParser.toEntity(bodyMessage);
 			reqBody.setOrgaTranNo(useOrgTxId);
@@ -228,7 +230,7 @@ public class ProxyServerHandler extends ChannelInboundHandlerAdapter {
 		if (!SystemCodeConstants.SUMMRAY.equals(rcvCode)) {
 			return getTcpClientAndSendMessage(rcvCode, inBuf);
 		}
-		String useOrgTxId = esbTxId.substring(esbTxId.length() - 12);
+		String useOrgTxId = USE_ORG_CODE_SUFFIX + esbTxId.substring(esbTxId.length() - 8);
 		if (TcpHeaderTransactionCode.VIEW_BILLING_DETAIL.getCode().equals(interfaceSpec.getMessageCode())) {
 			String bodyMessage = MessageSlice.getVeiwBillingDetailTotalBody(inBuf);
 			ViewBillingDetailBody reqBody = ViewBillingDetailParser.toEntity(bodyMessage);

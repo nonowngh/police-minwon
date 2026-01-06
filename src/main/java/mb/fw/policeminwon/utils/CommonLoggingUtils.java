@@ -14,7 +14,8 @@ public class CommonLoggingUtils {
 		TcpStatusCode tcpStatusCode = TcpStatusCode.fromCode(responseCode);
 		String errorMsg = "'" + esbTxId + "' tcp response code : [" + tcpStatusCode.getCode() + "]"
 				+ tcpStatusCode.getDescription();
-		log.info(errorMsg);
+		if(esbTxId.contains("_00_")) log.debug(errorMsg);
+		else log.info(errorMsg);
 	}
 
 	// logging routing and interface info
