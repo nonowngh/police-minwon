@@ -42,4 +42,11 @@ public class KftcNotificationHistoryDao {
 
 		return list.isEmpty() ? null : list.get(0); // 여러 건 있어도 첫 건만
 	}
+
+	/**
+	 * 이력 삭제
+	 */
+	public int deleteHistory() {
+		return jdbcTemplate.update(historyProperties.getDeleteSql());
+	}
 }

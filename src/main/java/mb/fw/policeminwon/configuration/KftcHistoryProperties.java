@@ -13,4 +13,6 @@ import lombok.Data;
 public class KftcHistoryProperties {
 	private String insertSql;
 	private String selectSql;
+	private String deleteCronSchedule = null;
+	private String deleteSql;
 }

@@ -208,8 +208,8 @@ public class ProxyServerHandler extends ChannelInboundHandlerAdapter {
 			}).onErrorResume(ex -> {
 				log.error("API 호출 중 오류 발생: ", ex);
 				ByteBuf outBuf = buildResponseBuf(inBuf, "0430", TcpStatusCode.SYSTEM_ERROR.getCode(), useOrgTxId,
-						"시스템 오류 : 즉심 API 호출 오류");
-				return getTcpClientAndSendMessage(SystemCodeConstants.ESB, outBuf);
+						bodyMessage);
+				return getTcpClientAndSendMessage(SystemCodeConstants.ESB, outBuf).then(Mono.error(ex));
 			});
 		}
 		return getTcpClientAndSendMessage(rcvSystemCode, inBuf);
@@ -251,7 +251,7 @@ public class ProxyServerHandler extends ChannelInboundHandlerAdapter {
 						log.error("API 호출 중 오류 발생: ", ex);
 						ByteBuf outBuf = buildResponseBuf(inBuf, "0210", TcpStatusCode.SYSTEM_ERROR.getCode(),
 								useOrgTxId, bodyMessage);
-						return getTcpClientAndSendMessage(SystemCodeConstants.ESB, outBuf);
+						return getTcpClientAndSendMessage(SystemCodeConstants.ESB, outBuf).then(Mono.error(ex));
 					});
 		} else {
 			String bodyMessage = MessageSlice.getPaymentResultNotificationTotalBody(inBuf);
@@ -272,7 +272,7 @@ public class ProxyServerHandler extends ChannelInboundHandlerAdapter {
 				log.error("API 호출 중 오류 발생: ", ex);
 				ByteBuf outBuf = buildResponseBuf(inBuf, "0210", TcpStatusCode.SYSTEM_ERROR.getCode(), useOrgTxId,
 						bodyMessage);
-				return getTcpClientAndSendMessage(SystemCodeConstants.ESB, outBuf);
+				return getTcpClientAndSendMessage(SystemCodeConstants.ESB, outBuf).then(Mono.error(ex));
 			});
 		}
 	}

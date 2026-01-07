@@ -130,7 +130,7 @@ public class AsyncConnectionClient {
 		return bootstrap.connect(host, port).addListener((ChannelFutureListener) future -> {
 			if (future.isSuccess()) {
 				channel = future.channel();
-				log.info("Connected to [{}:{}] ({})server ", host, port, systemCode);
+				log.debug("Connected to [{}:{}] ({})server ", host, port, systemCode);
 			} else {
 				log.error("Reconnection failed [{}:{}].", host, port);
 			}
