@@ -71,12 +71,11 @@ public class ByteBufUtils {
 	    String numberStr = String.format("%0" + fixedLength + "d", value);
 	    buf.writeBytes(numberStr.getBytes(StandardCharsets.US_ASCII));
 	}
-	public static void writeLeftPaddingNumber(ByteBuf buf, int value, int fixedLength, boolean isPrint) {
+	public static void writeLeftPaddingNumber(ByteBuf buf, long value, int fixedLength, boolean isPrint) {
 		int initBufLength = buf.readableBytes();
 		String numberStr = String.format("%0" + fixedLength + "d", value);
 		buf.writeBytes(numberStr.getBytes(StandardCharsets.US_ASCII));
 		if(isPrint) CommonLoggingUtils.printFieldInfo(buf.toString(initBufLength, fixedLength, TcpCommonSettingConstants.MESSAGE_CHARSET), fixedLength);
-
 	}
 	
 	public static ByteBuf addMessageLength(ByteBuf messageBuf) {

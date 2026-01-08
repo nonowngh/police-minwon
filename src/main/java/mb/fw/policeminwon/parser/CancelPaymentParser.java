@@ -31,12 +31,26 @@ public class CancelPaymentParser {
 		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getRoffFncInstCd(), 0), 7, true);
 	    ByteBufUtils.writeRightPaddingString(buf, entity.getRealPayerRrno(), 13, true);
 	    ByteBufUtils.writeRightPaddingString(buf, entity.getCentTranNo(), 12, true);
-	    ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getOrgdlTrsmDt(), 0), 12, true);
+	    ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toLong(entity.getOrgdlTrsmDt(), 0), 12, true);
 	    ByteBufUtils.writeRightPaddingString(buf, "", 16, true);
-	    ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getOrgdlPayAmt(), 0), 15, true);
+	    ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toLong(entity.getOrgdlPayAmt(), 0), 15, true);
 	    ByteBufUtils.writeRightPaddingString(buf, entity.getRtrcnRsn(), 1, true);
 	    ByteBufUtils.writeRightPaddingString(buf, entity.getOrgdlPayCd(), 1, true);
 	    ByteBufUtils.writeRightPaddingString(buf, "", 9, true);
 	    return buf.toString(TcpCommonSettingConstants.MESSAGE_CHARSET);
+	}
+	
+	public static void main(String[] args) {
+		CancelPaymentBody body = new CancelPaymentBody();
+		body.setRoffFncInstCd("5485432");
+		body.setRealPayerRrno("12345678910");
+		body.setOrgdlTrsmDt("260107145921");
+		body.setCentTranNo("");
+		body.setOrgdlPayAmt("5525252000");
+		body.setOrgdlPayCd("");
+		body.setRtrcnRsn("");
+		
+		System.out.println(toMessage(body).getBytes().length);
+		
 	}
 }

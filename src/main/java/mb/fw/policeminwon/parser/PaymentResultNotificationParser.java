@@ -45,7 +45,7 @@ public class PaymentResultNotificationParser {
 		ByteBufUtils.writeRightPaddingString(buf, entity.getEltrPymNo(), 19, true);
 		ByteBufUtils.writeRightPaddingString(buf, "", 3, true);
 		ByteBufUtils.writeRightPaddingString(buf, "", 7, true);
-		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getPayAmt(), 0), 15, true);
+		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toLong(entity.getPayAmt(), 0), 15, true);
 		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getPayYmd(), 0), 8, true);
 		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getRoffFncInstCd(), 0), 7, true);
 		ByteBufUtils.writeRightPaddingString(buf, "", 16, true);
