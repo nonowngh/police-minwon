@@ -40,23 +40,23 @@ public class PaymentResultNotificationParser {
 
 	public static String toMessage(PaymentResultNotificationBody entity) {
 		ByteBuf buf = Unpooled.buffer();
-		ByteBufUtils.writeRightPaddingString(buf, entity.getPayerRrno(), 13, true);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getPcptaxColctrAcno(), 6, true);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getEltrPymNo(), 19, true);
-		ByteBufUtils.writeRightPaddingString(buf, "", 3, true);
-		ByteBufUtils.writeRightPaddingString(buf, "", 7, true);
-		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toLong(entity.getPayAmt(), 0), 15, true);
-		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getPayYmd(), 0), 8, true);
-		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getRoffFncInstCd(), 0), 7, true);
-		ByteBufUtils.writeRightPaddingString(buf, "", 16, true);
-		ByteBufUtils.writeRightPaddingString(buf, "", 14, true);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getRealPayerRrno(), 13, true);
-		ByteBufUtils.writeRightPaddingString(buf, "", 10, true);
-		ByteBufUtils.writeRightPaddingString(buf, "", 10, true);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getPaySysCd(), 1, true);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getApaySysCd(), 1, true);
-		ByteBufUtils.writeRightPaddingString(buf, entity.getPayCd(), 1, true);
-		ByteBufUtils.writeRightPaddingString(buf, "", 9, true);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getPayerRrno(), 13, false);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getPcptaxColctrAcno(), 6, false);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getEltrPymNo(), 19, false);
+		ByteBufUtils.writeRightPaddingString(buf, "", 3, false);
+		ByteBufUtils.writeRightPaddingString(buf, "", 7, false);
+		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toLong(entity.getPayAmt(), 0), 15, false);
+		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getPayYmd(), 0), 8, false);
+		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getRoffFncInstCd(), 0), 7, false);
+		ByteBufUtils.writeRightPaddingString(buf, "", 16, false);
+		ByteBufUtils.writeRightPaddingString(buf, "", 14, false);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getRealPayerRrno(), 13, false);
+		ByteBufUtils.writeRightPaddingString(buf, "", 10, false);
+		ByteBufUtils.writeRightPaddingString(buf, "", 10, false);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getPaySysCd(), 1, false);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getApaySysCd(), 1, false);
+		ByteBufUtils.writeRightPaddingString(buf, entity.getPayCd(), 1, false);
+		ByteBufUtils.writeRightPaddingString(buf, "", 9, false);
 		return buf.toString(TcpCommonSettingConstants.MESSAGE_CHARSET);
 	}
 }

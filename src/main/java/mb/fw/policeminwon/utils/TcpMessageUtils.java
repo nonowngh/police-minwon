@@ -5,6 +5,7 @@ import java.util.Map;
 
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
+import mb.fw.policeminwon.constants.MaskingType;
 import mb.fw.policeminwon.constants.TcpCommonSettingConstants;
 
 @Slf4j
@@ -19,6 +20,7 @@ public class TcpMessageUtils {
 	public static final Map<String, Integer> VIEW_BILLING_DETAIL_BODY_MAP = new LinkedHashMap<>();
 	public static final Map<String, Integer> PAYMENT_RESULT_NOTIFICATION_BODY_MAP = new LinkedHashMap<>();
 	public static final Map<String, Integer> CANCEL_PAYMENT_BODY_MAP = new LinkedHashMap<>();
+	public static final Map<String, MaskingType> MASKING_FIELD_MAP = new LinkedHashMap<>();
 	static {
 //		HEADER_MAP.put("전문길이", 4);
 		HEADER_MAP.put("업무구분", 3);
@@ -80,7 +82,7 @@ public class TcpMessageUtils {
 		PAYMENT_RESULT_NOTIFICATION_BODY_MAP.put("출금 금융회사 점별코드", 7);
 		PAYMENT_RESULT_NOTIFICATION_BODY_MAP.put("예비정보 FIELD3", 16);
 		PAYMENT_RESULT_NOTIFICATION_BODY_MAP.put("예비정보 FIELD4", 14);
-		PAYMENT_RESULT_NOTIFICATION_BODY_MAP.put("납부자 주민(사업자) 등록번호", 13);
+		PAYMENT_RESULT_NOTIFICATION_BODY_MAP.put("납부자 주민(사업자)등록번호", 13);
 		PAYMENT_RESULT_NOTIFICATION_BODY_MAP.put("예비정보 FIELD5", 10);
 		PAYMENT_RESULT_NOTIFICATION_BODY_MAP.put("예비정보 FIELD6", 10);
 		PAYMENT_RESULT_NOTIFICATION_BODY_MAP.put("납부 이용시스템", 1);
@@ -97,6 +99,11 @@ public class TcpMessageUtils {
 		CANCEL_PAYMENT_BODY_MAP.put("취소사유", 1);
 		CANCEL_PAYMENT_BODY_MAP.put("원거래 납부형태 구분", 1);
 		CANCEL_PAYMENT_BODY_MAP.put("예비정보 FIELD2", 9);
+
+		MASKING_FIELD_MAP.put("(회원정보연계)회원 주민등록번호", MaskingType.RRN);
+		MASKING_FIELD_MAP.put("납부의무자 주민(사업자,법인)등록번호", MaskingType.RRN);
+		MASKING_FIELD_MAP.put("납부자 주민(사업자)등록번호", MaskingType.RRN);
+		MASKING_FIELD_MAP.put("징수관 계좌번호", MaskingType.ACCOUNT);
 	}
 
 	public static String saveHistoryMessage(ByteBuf buf) {
@@ -150,7 +157,43 @@ public class TcpMessageUtils {
 		byte[] bytes = new byte[length];
 		buf.readBytes(bytes);
 		String value = new String(bytes, TcpCommonSettingConstants.MESSAGE_CHARSET);
+
+		//마스킹 적용
+		if (MASKING_FIELD_MAP.containsKey(fieldName)) {
+			value = applyMasking(MASKING_FIELD_MAP.get(fieldName), value);
+		}
 		sb.append(fieldName).append("=[").append(value).append("](").append(length).append(")")
 				.append(System.lineSeparator());
+	}
+
+	private static String applyMasking(MaskingType type, String value) {
+		switch (type) {
+		case RRN:
+			return maskRrn(value);
+		case ACCOUNT:
+			return maskAccount(value);
+		default:
+			return value;
+		}
+	}
+
+	private static String maskRrn(String rrn) {
+		if (rrn == null)
+			return null;
+		return rrn.replaceAll("(\\d{6})[-]?\\d{7}", "$1-*******");
+	}
+
+	private static String maskAccount(String account) {
+		if (account == null || account.length() < 6)
+			return account;
+		return account.substring(0, 4) + repeat('*', account.length() - 6) + account.substring(account.length() - 2);
+	}
+
+	private static String repeat(char c, int count) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < count; i++) {
+			sb.append(c);
+		}
+		return sb.toString();
 	}
 }

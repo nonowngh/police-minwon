@@ -28,15 +28,15 @@ public class CancelPaymentParser {
 
 	public static String toMessage(CancelPaymentBody entity) {
 		ByteBuf buf = Unpooled.buffer();		
-		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getRoffFncInstCd(), 0), 7, true);
-	    ByteBufUtils.writeRightPaddingString(buf, entity.getRealPayerRrno(), 13, true);
-	    ByteBufUtils.writeRightPaddingString(buf, entity.getCentTranNo(), 12, true);
-	    ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toLong(entity.getOrgdlTrsmDt(), 0), 12, true);
-	    ByteBufUtils.writeRightPaddingString(buf, "", 16, true);
-	    ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toLong(entity.getOrgdlPayAmt(), 0), 15, true);
-	    ByteBufUtils.writeRightPaddingString(buf, entity.getRtrcnRsn(), 1, true);
-	    ByteBufUtils.writeRightPaddingString(buf, entity.getOrgdlPayCd(), 1, true);
-	    ByteBufUtils.writeRightPaddingString(buf, "", 9, true);
+		ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toInt(entity.getRoffFncInstCd(), 0), 7, false);
+	    ByteBufUtils.writeRightPaddingString(buf, entity.getRealPayerRrno(), 13, false);
+	    ByteBufUtils.writeRightPaddingString(buf, entity.getCentTranNo(), 12, false);
+	    ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toLong(entity.getOrgdlTrsmDt(), 0), 12, false);
+	    ByteBufUtils.writeRightPaddingString(buf, "", 16, false);
+	    ByteBufUtils.writeLeftPaddingNumber(buf, NumberUtils.toLong(entity.getOrgdlPayAmt(), 0), 15, false);
+	    ByteBufUtils.writeRightPaddingString(buf, entity.getRtrcnRsn(), 1, false);
+	    ByteBufUtils.writeRightPaddingString(buf, entity.getOrgdlPayCd(), 1, false);
+	    ByteBufUtils.writeRightPaddingString(buf, "", 9, false);
 	    return buf.toString(TcpCommonSettingConstants.MESSAGE_CHARSET);
 	}
 	

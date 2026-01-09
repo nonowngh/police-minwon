@@ -132,18 +132,6 @@ public class ProxyServerHandler extends ChannelInboundHandlerAdapter {
 			String esbTxId = TransactionIdGenerator.generate(interfaceSpec.getInterfaceId(),
 					TransactionSequenceGenerator.getNextSequence(), reqMsgDateTime, nowDateTime);
 
-//			Map<TcpHeaderTransactionCode, Supplier<Mono<Void>>> actions = new HashMap<>();
-//			// 테스트 콜
-//			actions.put(TcpHeaderTransactionCode.TEST_CALL, testCall(inBuf, interfaceSpec));
-//			// 고지내역 상세조회
-//			actions.put(TcpHeaderTransactionCode.VIEW_BILLING_DETAIL,
-//					penaltyProcess(inBuf, interfaceSpec, esbTxId, centerTxId, eltcPymNo));
-//			// 납부결과 통지
-//			actions.put(TcpHeaderTransactionCode.PAYMENT_RESULT_NOTIFICATION,
-//					penaltyProcess(inBuf, interfaceSpec, esbTxId, centerTxId, eltcPymNo));
-//			// 납부 (재)취소
-//			actions.put(TcpHeaderTransactionCode.CANCEL_PAYMENT, cancelProcess(inBuf, interfaceSpec, esbTxId));
-
 			Mono<Void> action;
 			switch (tcpHeaderTransactionCode) {
 			case TEST_CALL:
@@ -160,18 +148,6 @@ public class ProxyServerHandler extends ChannelInboundHandlerAdapter {
 				action = Mono.error(new IllegalArgumentException("Invalid transaction-code"));
 			}
 
-//			Mono<Void> action = actions.getOrDefault(tcpHeaderTransactionCode, Mono.error(
-//					new IllegalArgumentException("Invalid transaction-code -> " + tcpHeaderTransactionCode.getCode())));
-//			Mono<Void> filteredAction = TcpHandlerLoggingFilter.routeLoggingFilter(action, interfaceSpec, jmsTemplate,
-//					esbTxId, nowDateTime, responseCode, inBuf);
-//			filteredAction.doFinally(signal -> {
-//				try {
-//					if (inBuf.refCnt() > 0)
-//						ReferenceCountUtil.release(inBuf);
-//				} catch (Exception ex) {
-//					log.error("Error while releasing inBuf", ex);
-//				}
-//			}).subscribe();
 			Mono<Void> filteredAction = TcpHandlerLoggingFilter.routeLoggingFilter(action, interfaceSpec, jmsTemplate,
 					esbTxId, nowDateTime, responseCode, inBuf);
 			filteredAction.doFinally(signal -> {
