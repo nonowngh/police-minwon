@@ -52,9 +52,9 @@ public class KftcApiJob {
 			String apiOpenTrxDtm = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssFFF"));
 			String openRandomStr = RandomStringUtils.randomAlphanumeric(4).toUpperCase();
 			String apiOpenTrxNo = orgCode + apiOpenTrxDtm.substring(8, 14) + openRandomStr;
-			KftcFileReceiveResponse openResposne = executeReceiveApi(accessToken, apiOpenTrxDtm, apiOpenTrxNo);
-			String sptfId = openResposne.getSftpOneTimeId();
-			String sptfPasswd = openResposne.getSftpOneTimePasswd();
+			KftcFileReceiveResponse openResponse = executeReceiveApi(accessToken, apiOpenTrxDtm, apiOpenTrxNo);
+			String sptfId = openResponse.getSftpOneTimeId();
+			String sptfPasswd = openResponse.getSftpOneTimePasswd();
 			log.info("SFTP 계정(id,passwd) 발급 성공");
 			// 3.sftp 접속 및 파일 수신
 			String downloadPath = executeFileDownload(sptfId, sptfPasswd);
