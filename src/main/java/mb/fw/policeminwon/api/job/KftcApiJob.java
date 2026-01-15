@@ -48,17 +48,18 @@ public class KftcApiJob {
 		try {
 			// 1. 토큰 발급
 			String accessToken = executeOAuthApi();
-			// 2. 파일 수신 개시 API 호출
-			String apiOpenTrxDtm = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssFFF"));
+
+			// 2. 파일 수신 개시
+			String apiOpenTrxDtm = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
 			String openRandomStr = RandomStringUtils.randomAlphanumeric(4).toUpperCase();
 			String apiOpenTrxNo = orgCode + apiOpenTrxDtm.substring(8, 14) + openRandomStr;
 			KftcFileReceiveResponse openResponse = executeReceiveApi(accessToken, apiOpenTrxDtm, apiOpenTrxNo);
-			String sptfId = openResponse.getSftpOneTimeId();
-			String sptfPasswd = openResponse.getSftpOneTimePasswd();
-			log.info("SFTP 계정(id,passwd) 발급 성공");
+
 			// 3.sftp 접속 및 파일 수신
-			String downloadPath = executeFileDownload(sptfId, sptfPasswd);
-			log.info("파일 다운로드 성공 : {}", downloadPath);
+			String downloadPath = executeFileDownload(openResponse.getSftpOneTimeId(),
+					openResponse.getSftpOneTimePasswd());
+			log.info("파일 다운로드 완료 : {}", downloadPath);
+
 			// 4. 수신 종료
 			KftcTransferCloseResponse closeResponse = executeCloseApi(accessToken, apiOpenTrxNo, apiOpenTrxDtm, "R000");
 		} catch (Exception e) {
@@ -67,23 +68,31 @@ public class KftcApiJob {
 	}
 
 	private String executeFileDownload(String sptfId, String sptfPasswd) {
-		sftpSessionFactory.setUser(sptfId);
-		sftpSessionFactory.setPassword(sptfPasswd);
-		SftpRemoteFileTemplate dynamicTemplate = new SftpRemoteFileTemplate(sftpSessionFactory);
-		String remotePath = "/kftc/data/test.zip";
-		String localPath = "/app/down/test.zip";
-		dynamicTemplate.execute(session -> {
-			try (FileOutputStream fos = new FileOutputStream(new File(localPath))) {
-				session.read(remotePath, fos);
+		synchronized (sftpSessionFactory) {
+			sftpSessionFactory.setUser(sptfId);
+			sftpSessionFactory.setPassword(sptfPasswd);
+			SftpRemoteFileTemplate dynamicTemplate = new SftpRemoteFileTemplate(sftpSessionFactory);
+			String remotePath = "/kftc/data/test.zip";
+			String localPath = "/app/down/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+					+ "_down.zip";
+			dynamicTemplate.execute(session -> {
+				File localFile = new File(localPath);
+				if (!localFile.getParentFile().exists())
+					localFile.getParentFile().mkdirs();
+				try (FileOutputStream fos = new FileOutputStream(localFile)) {
+					session.read(remotePath, fos);
+				} catch (Exception e) {
+					throw new RuntimeException("SFTP 파일 읽기 실패", e);
+				}
 				return true;
-			}
-		});
-		return localPath;
+			});
+			return localPath;
+		}
 	}
 
 	private KftcTransferCloseResponse executeCloseApi(String accessToken, String apiOpenTrxNo, String apiOpenTrxDtm,
 			String resultCode) throws Exception {
-		String apiCloseTrxDtm = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssFFF"));
+		String apiCloseTrxDtm = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
 		String closeRandomStr = RandomStringUtils.randomAlphanumeric(4).toUpperCase();
 		String apiCloseTrxNo = orgCode + apiCloseTrxDtm.substring(8, 14) + closeRandomStr;
 		KftcTransferCloseRequest request = KftcTransferCloseRequest.builder().orgApiTrxNo(apiOpenTrxNo)
