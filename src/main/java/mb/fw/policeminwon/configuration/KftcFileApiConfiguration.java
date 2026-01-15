@@ -45,6 +45,10 @@ public class KftcFileApiConfiguration {
 	private String transferCloseUrl;
 
 	private String transferResultUrl;
+	
+	private String receiveFileName;
+
+	private String receiveLocalDirectory;
 
 	private String sftpIp;
 
@@ -58,7 +62,7 @@ public class KftcFileApiConfiguration {
 			@Qualifier("transferCloseWebClient") WebClient closeClient,
 			@Qualifier("transferResultWebClient") WebClient resultClient, DefaultSftpSessionFactory sftpSessionFactory) {
 
-		return new KftcApiJob(authRequest, receiveClient, closeClient, resultClient, sftpIp, sftpPort, orgCode, sftpSessionFactory);
+		return new KftcApiJob(authRequest, receiveClient, closeClient, resultClient, sftpIp, sftpPort, orgCode, sftpSessionFactory, receiveFileName, receiveLocalDirectory);
 	}
 
 	@Bean(name = "kftcAuthRequest")

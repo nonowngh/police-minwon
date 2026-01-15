@@ -29,10 +29,12 @@ public class KftcApiJob {
 	String sftpIp;
 	int sftpPort;
 	String orgCode;
+	String receiveFileName;
+	String receiveLocalDirectory;
 
 	public KftcApiJob(WebClient.RequestHeadersSpec<?> authRequest, WebClient receiveWebClient, WebClient closeWebClient,
 			WebClient resultWebClient, String sftpIp, int sftpPort, String orgCode,
-			DefaultSftpSessionFactory sftpSessionFactory) {
+			DefaultSftpSessionFactory sftpSessionFactory, String receiveFileName, String receiveLocalDirectory) {
 		this.authRequest = authRequest;
 		this.receiveWebClient = receiveWebClient;
 		this.closeWebClient = closeWebClient;
@@ -41,6 +43,8 @@ public class KftcApiJob {
 		this.sftpPort = sftpPort;
 		this.orgCode = orgCode;
 		this.sftpSessionFactory = sftpSessionFactory;
+		this.receiveFileName = receiveFileName;
+		this.receiveLocalDirectory = receiveLocalDirectory;
 	}
 
 	@Scheduled(cron = "${kftc.api.job-cron:0 0 0 * *}")
@@ -57,7 +61,7 @@ public class KftcApiJob {
 
 			// 3.sftp 접속 및 파일 수신
 			String downloadPath = executeFileDownload(openResponse.getSftpOneTimeId(),
-					openResponse.getSftpOneTimePasswd());
+					openResponse.getSftpOneTimePasswd(), receiveFileName, receiveLocalDirectory);
 			log.info("파일 다운로드 완료 : {}", downloadPath);
 
 			// 4. 수신 종료
@@ -67,14 +71,15 @@ public class KftcApiJob {
 		}
 	}
 
-	private String executeFileDownload(String sptfId, String sptfPasswd) {
+	private String executeFileDownload(String sptfId, String sptfPasswd, String receiveFileName,
+			String receiveLocalDirectory) {
 		synchronized (sftpSessionFactory) {
 			sftpSessionFactory.setUser(sptfId);
 			sftpSessionFactory.setPassword(sptfPasswd);
 			SftpRemoteFileTemplate dynamicTemplate = new SftpRemoteFileTemplate(sftpSessionFactory);
 			String remotePath = "/kftc/data/test.zip";
-			String localPath = "/app/down/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))
-					+ "_down.zip";
+			String localPath = receiveLocalDirectory
+					+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + receiveFileName;
 			dynamicTemplate.execute(session -> {
 				File localFile = new File(localPath);
 				if (!localFile.getParentFile().exists())
